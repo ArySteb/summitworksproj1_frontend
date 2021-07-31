@@ -1,29 +1,15 @@
+import { CssBaseline } from '@material-ui/core';
 import React from 'react';
-import {
-  BrowserRouter, Route, Switch
-} from "react-router-dom";
-import { NgoLayout } from './Components/Layout';
-import { UserManagement } from './Views/Admin/UserManagement';
-import { Home } from './Views/Home';
+import { BrowserRouter } from 'react-router-dom';
+import { NgoLayout } from './Components/NgoLayout';
+import { MainRouter } from './Routes/MainRouter';
 
-function App() {
+function App(): JSX.Element {
   return (
     <BrowserRouter>
+      <CssBaseline />
       <NgoLayout>
-        <Switch>
-          <Route exact path="/">
-            initial page  
-          </Route>
-          <Route path="/home">
-            <Home />
-          </Route>
-          <Route path="/userm">
-            <UserManagement />
-          </Route>
-          <Route path="/">
-            error 404
-          </Route>
-        </Switch>
+        <MainRouter />
       </NgoLayout>
     </BrowserRouter>
   );
