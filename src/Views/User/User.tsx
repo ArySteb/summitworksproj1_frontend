@@ -1,4 +1,4 @@
-import { CircularProgress, Container } from '@material-ui/core';
+import { CircularProgress, Container, Grid } from '@material-ui/core';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { EventBox } from '../../Components/EventBox';
@@ -25,16 +25,20 @@ export default function User(): JSX.Element {
 
   return (
     <Container>
-      {events.map((ev) => {
-        return (
-          <EventBox
-            img_url={ev.img_url}
-            name={ev.name}
-            desc={ev.desc}
-            event_id={ev.id}
-          />
-        );
-      })}
+      <Grid container direction="row">
+        {events.map((ev) => {
+          return (
+            <Grid item xs={3} key={ev.id}>
+              <EventBox
+                img_url={ev.img_url}
+                name={ev.name}
+                desc={ev.desc}
+                event_id={ev.id}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
       {events.length === 0 ? <div>nothing!</div> : <></>}
     </Container>
   );
