@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Container,
@@ -9,6 +9,9 @@ import {
   Theme,
 } from '@material-ui/core';
 import axios from 'axios';
+import { Redirect, useHistory, useRouteMatch } from 'react-router-dom';
+import { AuthContext } from '../../Contexts/AuthContext';
+import { useQuery } from '../../Utils/UseQuery';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,44 +30,34 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Home(): JSX.Element {
+  const history = useHistory();
+  const { url } = useRouteMatch();
+  const { userInfo, refresh } = useContext(AuthContext);
   const classes = useStyles();
+  const query = useQuery();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    axios
-      .get('api/users', {
-        headers: {
-          credentials: 'include',
-          'content-type': 'application/json',
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log('error', err);
-      });
-  }, []);
-
   const handleSubmit = (event: any): void => {
     event.preventDefault();
-    axios('/api/users', {
+    axios('/api/session', {
       method: 'POST',
       data: {
         email,
         password,
       },
-      auth: {
-        username: 'steb@mail.com',
-        password: 'password123',
-      },
-      withCredentials: true,
-    }).catch((err) => {
-      console.log('other error', err);
-    });
+    })
+      .then(() => {
+        history.push(`${url}?loggedin`);
+        refresh();
+      })
+      .catch(() => {
+        history.push(`${url}?loginfailure`);
+      });
   };
+
+  useEffect(() => {}, []);
 
   const handleEmailChange = (event: any): void => {
     setEmail(event.target.value);
@@ -74,13 +67,18 @@ export default function Home(): JSX.Element {
     setPassword(event.target.value);
   };
 
+  if (userInfo) {
+    const page = userInfo.role === 'ADMIN' ? 'admin' : 'user';
+    return <Redirect to={`${page}`} />;
+  }
+
   return (
     <Container>
       <header>
         <h1 className={classes.title}>NGO Site!</h1>
       </header>
       <main className={classes.mainContent}>
-        <h2 className={classes.loginTitle}>Make a User here!</h2>
+        <h2 className={classes.loginTitle}>Log in to NGO here!</h2>
         <form onSubmit={handleSubmit}>
           <TextField
             placeholder="Email"
@@ -97,7 +95,7 @@ export default function Home(): JSX.Element {
           />
           <br />
           <Button variant="contained" type="submit">
-            Register
+            Log In
           </Button>
         </form>
       </main>

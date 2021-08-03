@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface NgoLayoutProps {
-  children?: string | JSX.Element;
+  children?: string | JSX.Element | JSX.Element[];
 }
 
 export default function NgoLayout(props: NgoLayoutProps): JSX.Element {

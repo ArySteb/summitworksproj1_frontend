@@ -1,18 +1,19 @@
-import { CssBaseline } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+
+import { CssBaseline } from '@material-ui/core';
+
 import { NgoLayout } from './Components/NgoLayout';
 import { MainRouter } from './Routes/MainRouter';
+import { AuthContextProvider } from './Contexts/AuthContext';
 
-function App(): JSX.Element {
+export default function App(): JSX.Element {
   return (
     <BrowserRouter>
-      <CssBaseline />
-      <NgoLayout>
+      <AuthContextProvider>
+        <CssBaseline />
         <MainRouter />
-      </NgoLayout>
+      </AuthContextProvider>
     </BrowserRouter>
   );
 }
-
-export default App;
