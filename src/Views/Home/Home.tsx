@@ -12,6 +12,7 @@ import axios from 'axios';
 import { Redirect, useHistory, useRouteMatch } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { useQuery } from '../../Utils/UseQuery';
+import { TopBar } from '../../Components/TopBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,6 +76,7 @@ export default function Home(): JSX.Element {
   return (
     <Container>
       <header>
+        <TopBar />
         <h1 className={classes.title}>NGO Site!</h1>
       </header>
       <main className={classes.mainContent}>

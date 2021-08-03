@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 export const AuthContext = React.createContext<{
   userInfo: UserInfo;
-  refresh: () => void;
+  refresh: (instant?: boolean) => void;
 }>({
   userInfo: null,
   refresh: () => {
@@ -30,11 +30,9 @@ export default function AuthContextProvider(props: {
       .get<UserInfo>('/api/session')
       .then((res) => {
         setUserInfo(res.data);
-        // console.log('yup, logged in');
       })
       .catch(() => {
         setUserInfo(null);
-        // console.log('why u aint logged in');
         axios.delete('/api/session').catch(() => {
           //
         });
@@ -42,13 +40,6 @@ export default function AuthContextProvider(props: {
 
   useEffect(() => {
     refresh();
-    const stop = setInterval(() => {
-      refresh();
-    }, 5000);
-
-    return () => {
-      clearInterval(stop);
-    };
   }, []);
 
   return (

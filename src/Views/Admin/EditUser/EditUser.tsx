@@ -9,9 +9,10 @@ import {
   Theme,
 } from '@material-ui/core';
 import axios from 'axios';
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import type { PostUserData } from '../../../types';
+import type { GetUserData, PostUserData } from '../../../types';
+import { useQuery } from '../../../Utils/UseQuery';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,34 +25,42 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function reducer(
-  user: PostUserData,
-  action: {
-    type: string;
-    data?: unknown;
-    field?: string;
-  }
-): PostUserData {
+type ReduxAction =
+  | {
+      type: 'change';
+      data: PostUserData[keyof PostUserData];
+      field: keyof PostUserData;
+    }
+  | {
+      type: 'init';
+      data: Partial<PostUserData>;
+    };
+
+function reducer(user: PostUserData, action: ReduxAction): PostUserData {
   switch (action.type) {
     case 'change':
-      if (action.field) {
-        return {
-          ...user,
-          [action.field]: action.data,
-        };
-      }
-      return user;
+      return {
+        ...user,
+        [action.field]: action.data,
+      };
+    case 'init':
+      return {
+        ...user,
+        ...action.data,
+      };
     default:
-      return user;
+      return { ...user };
   }
 }
 
-export default function AddUser() {
+export default function EditUser() {
   const classes = useStyles();
-  const { url } = useRouteMatch();
+  const query = useQuery();
+  const id = query.get('id');
+
   const history = useHistory();
 
-  const [user, dispatch] = useReducer<typeof reducer>(reducer, {
+  const [user, dispatch] = useReducer(reducer, {
     first_name: '',
     last_name: '',
     email: '',
@@ -59,13 +68,31 @@ export default function AddUser() {
     role: 'USER',
   });
 
-  const changeField = (field: string, data: unknown) =>
-    dispatch({ type: 'change', field, data });
+  useEffect(() => {
+    axios
+      .get<GetUserData>(`/api/users/${id}`)
+      .then((res) => {
+        const { first_name, last_name, email, role } = res.data;
+        dispatch({
+          type: 'init',
+          data: { first_name, last_name, email, role },
+        });
+        console.log('urr');
+      })
+      .catch(() => {
+        history.push('/admin');
+      });
+  }, [history]);
+
+  const changeField = (
+    field: keyof PostUserData,
+    data: PostUserData[keyof PostUserData]
+  ) => dispatch({ type: 'change', field, data });
 
   const handleSubmit = (event: any): void => {
     event.preventDefault();
     axios
-      .post('/api/users', user)
+      .put(`/api/users/${id}`, user)
       .then((res) => {
         history.push(`/admin`);
       })
@@ -75,7 +102,7 @@ export default function AddUser() {
   return (
     <Container>
       <header>
-        <h2 className={classes.title}>Add a new user!</h2>
+        <h2 className={classes.title}>Edit user!</h2>
       </header>
       <main>
         <form onSubmit={handleSubmit}>
@@ -105,7 +132,7 @@ export default function AddUser() {
           <br />
           <TextField
             className={classes.field}
-            placeholder="Password"
+            placeholder="New Password"
             type="password"
             value={user.password}
             onChange={(e) => changeField('password', e.target.value)}
@@ -114,7 +141,9 @@ export default function AddUser() {
           <Select
             className={classes.field}
             value={user.role}
-            onChange={(e) => changeField('role', e.target.value)}
+            onChange={(e) =>
+              changeField('role', e.target.value as PostUserData['role'])
+            }
             label="Role"
           >
             <MenuItem value="ADMIN">Admin</MenuItem>
@@ -122,7 +151,7 @@ export default function AddUser() {
           </Select>
           <br />
           <Button className={classes.field} type="submit">
-            Create User
+            Submit Changes
           </Button>
         </form>
       </main>

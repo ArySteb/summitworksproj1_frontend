@@ -1,11 +1,8 @@
 import { Container } from '@material-ui/core';
 import React from 'react';
-import { AdminLayout } from '../../../Components/AdminLayout';
+import { EventBox } from '../../../Components/EventBox';
+import { User } from '../../User';
 
 export default function (): JSX.Element {
-  return (
-    <Container>
-      <div>user view</div>
-    </Container>
-  );
+  return <User />;
 }

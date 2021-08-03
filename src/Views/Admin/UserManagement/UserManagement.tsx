@@ -2,7 +2,6 @@ import {
   Button,
   Container,
   createStyles,
-  IconButton,
   LinearProgress,
   makeStyles,
   Paper,
@@ -18,15 +17,7 @@ import {
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
-
-type User = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  role: string;
-};
+import type { GetUserData } from '../../../types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,12 +43,12 @@ export default function UserManagement(): JSX.Element {
   const classes = useStyles();
 
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<GetUserData[]>([]);
   const { url } = useRouteMatch();
 
   const fetchData = () => {
     setLoading(true);
-    axios.get<User[]>('/api/users').then((res) => {
+    axios.get<GetUserData[]>('/api/users').then((res) => {
       setUsers(res.data);
       setLoading(false);
     });
@@ -68,9 +59,14 @@ export default function UserManagement(): JSX.Element {
   }, []);
 
   function deleteById(id: number): void {
-    axios.delete(`/api/users/${id}`).catch(() => {
-      console.log('[Error] error deleting user', id);
-    });
+    axios
+      .delete(`/api/users/${id}`)
+      .then(() => {
+        fetchData();
+      })
+      .catch(() => {
+        console.log('[Error] error deleting user', id);
+      });
   }
 
   return (
@@ -129,7 +125,7 @@ export default function UserManagement(): JSX.Element {
                     <TableCell className="">{u.email ?? '<None>'}</TableCell>
                     <TableCell className="">{u.role ?? '<None>'}</TableCell>
                     <TableCell className={classes.tableButton}>
-                      <Button component={Link} to={u.id.toString()}>
+                      <Button component={Link} to={`${url}/edit?id=${u.id}`}>
                         Edit
                       </Button>
                     </TableCell>

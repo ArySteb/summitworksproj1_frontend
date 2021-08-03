@@ -1,6 +1,14 @@
-import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+import {
+  Button,
+  CircularProgress,
+  createStyles,
+  makeStyles,
+  Theme,
+} from '@material-ui/core';
 import axios from 'axios';
-import React from 'react';
+
+import { AuthContext } from '../../Contexts/AuthContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,14 +21,15 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function LogoutButton(props: { text?: string }) {
   const { text = 'Log Out' } = props;
   const classes = useStyles();
+  const [loggingOut, setLoggingOut] = useState(false);
+  const { refresh } = useContext(AuthContext);
 
   const logout = () => {
-    axios.delete('/api/session').then(() =>
-      axios.post('/api/session', {
-        email: '_',
-        password: '_',
-      })
-    );
+    setLoggingOut(true);
+    axios.delete('/api/session').then(() => {
+      setLoggingOut(false);
+      refresh();
+    });
   };
 
   return (
@@ -30,7 +39,7 @@ export default function LogoutButton(props: { text?: string }) {
       color="primary"
       onClick={logout}
     >
-      {text}
+      {loggingOut ? <CircularProgress color="secondary" /> : text}
     </Button>
   );
 }

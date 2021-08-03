@@ -29,9 +29,15 @@ export const withAuth: <T>(
     if (!isAuthed) {
       const t = setTimeout(() => {
         history.push('/');
-      }, 3000);
+      }, 0);
+      return () => {
+        clearTimeout(t);
+      };
     }
-  }, [isAuthed]);
+    return () => {
+      //
+    };
+  });
 
   if (!isAuthed) {
     return (

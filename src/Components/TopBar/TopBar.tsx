@@ -31,12 +31,15 @@ export default function TopBar(props: {
   const classes = useStyles(drawerWidth);
 
   return (
-    <AppBar position="fixed" className={classes.topBar}>
-      <Toolbar>
-        <div className={classes.topBarTitle}>NGO</div>
-        <div className={classes.topBarName}>{name}</div>
-        <div className="material-icons">person</div>
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar position="fixed" className={classes.topBar}>
+        <Toolbar>
+          <div className={classes.topBarTitle}>NGO</div>
+          <div className={classes.topBarName}>{name}</div>
+          <div className="material-icons">person</div>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+    </>
   );
 }

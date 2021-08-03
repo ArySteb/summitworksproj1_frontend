@@ -31,7 +31,7 @@ export default function NgoLayout(props: NgoLayoutProps): JSX.Element {
     <>
       <AppBar>
         <Toolbar>
-          <div className="">NGO</div>
+          <div className={classes.title}>NGO</div>
           <div>
             <span className="material-icons-outlined">person_outline</span>
           </div>
