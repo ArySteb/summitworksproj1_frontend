@@ -56,7 +56,7 @@ export default function AdminLayout(props: {
             button
             key="user_management"
             component={Link}
-            to="user_management"
+            to="/admin/user_management"
           >
             User Management
           </ListItem>
@@ -64,19 +64,28 @@ export default function AdminLayout(props: {
             button
             key="event_management"
             component={Link}
-            to="event_management"
+            to="/admin/event_management"
           >
             Event Management
           </ListItem>
-          <ListItem button key="user_view" component={Link} to="user_view">
+          <ListItem
+            button
+            key="user_view"
+            component={Link}
+            to="/admin/user_view"
+          >
             User View
           </ListItem>
         </List>
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {children}
-        <LogoutButton />
+        <header>
+          <div className={classes.toolbar} />
+        </header>
+        <main>{children}</main>
+        <footer>
+          <LogoutButton />
+        </footer>
       </main>
     </div>
   );

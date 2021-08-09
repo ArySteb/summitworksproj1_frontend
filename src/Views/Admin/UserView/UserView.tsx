@@ -1,8 +1,6 @@
-import { Container } from '@material-ui/core';
 import React from 'react';
-import { EventBox } from '../../../Components/EventBox';
-import { User } from '../../User';
+import { UserRouter } from '../../../Routes/UserRouter';
 
-export default function (): JSX.Element {
-  return <User />;
+export default function UserView(): JSX.Element {
+  return <UserRouter />;
 }

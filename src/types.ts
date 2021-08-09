@@ -29,13 +29,13 @@ export type GetEventData = {
   child_price: number;
   desc: string;
   end_date: string;
-  end_time: NgoTime;
+  end_time: string;
   id: number;
   img_url: string;
   location: string;
   name: string;
   start_date: string;
-  start_time: NgoTime;
+  start_time: string;
 };
 
 export type PostEventData = Omit<

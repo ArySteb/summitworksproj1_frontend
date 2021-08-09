@@ -1,20 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Button,
   Container,
   createStyles,
-  Input,
   makeStyles,
   TextField,
-  Theme,
 } from '@material-ui/core';
 import axios from 'axios';
 import { Redirect, useHistory, useRouteMatch } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { useQuery } from '../../Utils/UseQuery';
 import { TopBar } from '../../Components/TopBar';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     title: {
       fontSize: '48px',
@@ -35,12 +32,13 @@ export default function Home(): JSX.Element {
   const { url } = useRouteMatch();
   const { userInfo, refresh } = useContext(AuthContext);
   const classes = useStyles();
-  const query = useQuery();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (event: any): void => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (
+    event
+  ): void => {
     event.preventDefault();
     axios('/api/session', {
       method: 'POST',
@@ -58,13 +56,11 @@ export default function Home(): JSX.Element {
       });
   };
 
-  useEffect(() => {}, []);
-
-  const handleEmailChange = (event: any): void => {
+  const handleEmailChange = (event: { target: { value: string } }): void => {
     setEmail(event.target.value);
   };
 
-  const handlePasswordChange = (event: any): void => {
+  const handlePasswordChange = (event: { target: { value: string } }): void => {
     setPassword(event.target.value);
   };
 

@@ -11,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Theme,
   Toolbar,
 } from '@material-ui/core';
 import axios from 'axios';
@@ -19,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import type { GetUserData } from '../../../types';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     columnTitle: {
       borderRight: 'solid 1px black',
@@ -65,7 +64,7 @@ export default function UserManagement(): JSX.Element {
         fetchData();
       })
       .catch(() => {
-        console.log('[Error] error deleting user', id);
+        // console.log('[Error] error deleting user', id);
       });
   }
 

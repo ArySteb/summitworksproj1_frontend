@@ -12,14 +12,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Theme,
   Toolbar,
 } from '@material-ui/core';
 import { Link, useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
-import { GetEventData, GetUserData } from '../../../types';
+import { GetEventData } from '../../../types';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     columnTitle: {
       borderRight: 'solid 1px black',
@@ -65,7 +64,7 @@ export default function EventManagement(): JSX.Element {
         fetchData();
       })
       .catch(() => {
-        console.log('[Error] error deleting event', id);
+        // console.log('[Error] error deleting event', id);
       });
   }
 

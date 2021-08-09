@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import React, { useEffect, useReducer } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import type { GetUserData, PostUserData } from '../../../types';
 import { useQuery } from '../../../Utils/UseQuery';
 
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type ReduxAction =
+export type ReduxAction =
   | {
       type: 'change';
       data: PostUserData[keyof PostUserData];
@@ -53,7 +53,7 @@ function reducer(user: PostUserData, action: ReduxAction): PostUserData {
   }
 }
 
-export default function EditUser() {
+export default function EditUser(): JSX.Element {
   const classes = useStyles();
   const query = useQuery();
   const id = query.get('id');
@@ -77,26 +77,28 @@ export default function EditUser() {
           type: 'init',
           data: { first_name, last_name, email, role },
         });
-        console.log('urr');
+        // console.log('');
       })
       .catch(() => {
         history.push('/admin');
       });
-  }, [history]);
+  }, [history, id]);
 
   const changeField = (
     field: keyof PostUserData,
     data: PostUserData[keyof PostUserData]
   ) => dispatch({ type: 'change', field, data });
 
-  const handleSubmit = (event: any): void => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     axios
       .put(`/api/users/${id}`, user)
-      .then((res) => {
+      .then(() => {
         history.push(`/admin`);
       })
-      .catch(console.log);
+      .catch(() => {
+        // nothing
+      });
   };
 
   return (

@@ -4,15 +4,30 @@ import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../Contexts/AuthContext';
 
-export const withAuth: <T>(
-  role: 'ADMIN' | 'USER'
-) => (
-  WrappedComponent: (props: T) => JSX.Element
-) => (props: T) => JSX.Element = (role) => (WrappedComponent) => (props) => {
+interface AuthComponentProps {
+  authRole: 'USER' | 'ADMIN';
+  errorComponent?: JSX.Element;
+  children: JSX.Element | JSX.Element[] | string;
+}
+
+function AuthComponent(props: AuthComponentProps): JSX.Element {
+  const {
+    children,
+    authRole,
+    errorComponent = (
+      <>
+        <header>
+          <h2>404</h2>
+        </header>
+        <main>Not Found... Redirecting...</main>
+      </>
+    ),
+  } = props;
+
   const { userInfo } = useContext(AuthContext);
   const history = useHistory();
 
-  const authVal = (r: typeof role) => {
+  const authVal = (r: typeof authRole) => {
     switch (r) {
       case 'ADMIN':
         return 2;
@@ -23,7 +38,8 @@ export const withAuth: <T>(
     }
   };
 
-  const isAuthed = userInfo !== null && authVal(role) <= authVal(userInfo.role);
+  const isAuthed =
+    userInfo !== null && authVal(authRole) <= authVal(userInfo.role);
 
   useEffect(() => {
     if (!isAuthed) {
@@ -38,29 +54,7 @@ export const withAuth: <T>(
       //
     };
   });
-
-  if (!isAuthed) {
-    return (
-      <>
-        <header>
-          <h2>404</h2>
-        </header>
-        <main>Not Found... Redirecting...</main>
-      </>
-    );
-  }
-  return <WrappedComponent {...props} />;
-};
-
-function AuthComponent(props: {
-  children: JSX.Element | JSX.Element | string;
-  authRole: 'USER' | 'ADMIN';
-}) {
-  const { children, authRole } = props;
-
-  const Authed = withAuth(authRole)(() => <>{children}</>);
-
-  return <Authed />;
+  return <>{isAuthed ? children : errorComponent}</>;
 }
 
 export default AuthComponent;

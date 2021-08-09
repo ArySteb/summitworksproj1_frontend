@@ -1,1 +1,2 @@
-export { default as User } from './User';
+export { Events } from './Events';
+export { EventInfo } from './EventInfo';

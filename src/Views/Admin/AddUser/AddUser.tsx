@@ -10,8 +10,9 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import React, { useReducer } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import type { PostUserData } from '../../../types';
+import { ReduxAction } from '../EditUser';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,14 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function reducer(
-  user: PostUserData,
-  action: {
-    type: string;
-    data?: unknown;
-    field?: string;
-  }
-): PostUserData {
+function reducer(user: PostUserData, action: ReduxAction): PostUserData {
   switch (action.type) {
     case 'change':
       if (action.field) {
@@ -46,9 +40,8 @@ function reducer(
   }
 }
 
-export default function AddUser() {
+export default function AddUser(): JSX.Element {
   const classes = useStyles();
-  const { url } = useRouteMatch();
   const history = useHistory();
 
   const [user, dispatch] = useReducer<typeof reducer>(reducer, {
@@ -59,17 +52,21 @@ export default function AddUser() {
     role: 'USER',
   });
 
-  const changeField = (field: string, data: unknown) =>
-    dispatch({ type: 'change', field, data });
+  const changeField = (
+    field: keyof PostUserData,
+    data: PostUserData[keyof PostUserData]
+  ) => dispatch({ type: 'change', field, data });
 
-  const handleSubmit = (event: any): void => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     axios
       .post('/api/users', user)
-      .then((res) => {
+      .then(() => {
         history.push(`/admin`);
       })
-      .catch(console.log);
+      .catch(() => {
+        // nothing
+      });
   };
 
   return (
@@ -114,7 +111,9 @@ export default function AddUser() {
           <Select
             className={classes.field}
             value={user.role}
-            onChange={(e) => changeField('role', e.target.value)}
+            onChange={(e) =>
+              changeField('role', e.target.value as PostUserData['role'])
+            }
             label="Role"
           >
             <MenuItem value="ADMIN">Admin</MenuItem>

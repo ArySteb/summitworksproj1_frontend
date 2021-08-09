@@ -1,13 +1,7 @@
 import React from 'react';
 
-import {
-  CircularProgress,
-  createStyles,
-  makeStyles,
-  Theme,
-} from '@material-ui/core';
-import axios from 'axios';
-import { Link, useHistory } from 'react-router-dom';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Link, useRouteMatch } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +29,7 @@ export default function EventBox(props: {
   name: string;
   desc: string;
   event_id: number;
-}) {
+}): JSX.Element {
   const classes = useStyles();
 
   const {
@@ -45,9 +39,11 @@ export default function EventBox(props: {
     event_id,
   } = props;
 
+  const { url } = useRouteMatch();
+
   return (
     <div className={classes.box}>
-      <Link to={`/events/register?event=${event_id}`}>
+      <Link to={`${url}/view?event=${event_id}`}>
         <img alt={name} src={img_url} className={classes.image} />
       </Link>
       <div className={classes.name}>{name}</div>

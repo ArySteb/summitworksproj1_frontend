@@ -2,8 +2,6 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { CssBaseline } from '@material-ui/core';
-
-import { NgoLayout } from './Components/NgoLayout';
 import { MainRouter } from './Routes/MainRouter';
 import { AuthContextProvider } from './Contexts/AuthContext';
 

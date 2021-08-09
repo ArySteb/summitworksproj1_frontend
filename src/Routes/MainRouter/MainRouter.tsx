@@ -1,13 +1,13 @@
+import { Container } from '@material-ui/core';
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { LogoutButton } from '../../Components/LogoutButton';
 import AuthComponent from '../../Utils/WithAuth';
 import { Home } from '../../Views/Home';
 import { AdminRouter } from '../AdminRouter';
 import { UserRouter } from '../UserRouter';
 
-interface MainRouterProps {}
-
-export default function MainRouter(props: MainRouterProps): JSX.Element {
+export default function MainRouter(): JSX.Element {
   return (
     <Switch>
       <Route exact path="/">
@@ -21,9 +21,17 @@ export default function MainRouter(props: MainRouterProps): JSX.Element {
       <Route path="/user">
         <AuthComponent authRole="USER">
           <UserRouter />
+
+          <footer>
+            <Container>
+              <LogoutButton />
+            </Container>
+          </footer>
         </AuthComponent>
       </Route>
-      <Route path="/">error 404</Route>
+      <Route path="/">
+        <Redirect to="/" />
+      </Route>
     </Switch>
   );
 }

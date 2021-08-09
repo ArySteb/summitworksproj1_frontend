@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react';
-import type { Reducer } from 'react';
 import {
   Button,
   Checkbox,
@@ -13,7 +12,7 @@ import {
   InputAdornment,
 } from '@material-ui/core';
 import axios from 'axios';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import type { PostEventData } from '../../../types';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,9 +47,8 @@ function reducer(event: PostEventData, action: ReduxAction): PostEventData {
   }
 }
 
-export default function AddEvent() {
+export default function AddEvent(): JSX.Element {
   const classes = useStyles();
-  const { url } = useRouteMatch();
   const history = useHistory();
 
   const [event, dispatch] = useReducer(reducer, {
@@ -71,14 +69,16 @@ export default function AddEvent() {
   const changeField = (field: string, data: unknown) =>
     dispatch({ type: 'change', field, data });
 
-  const handleSubmit = (e: any): void => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     axios
       .post('/api/events', event)
-      .then((res) => {
+      .then(() => {
         history.push(`/admin/event_management`);
       })
-      .catch(console.log);
+      .catch(() => {
+        // nothing
+      });
   };
 
   return (

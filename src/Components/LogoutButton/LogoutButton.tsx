@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function LogoutButton(props: { text?: string }) {
+export default function LogoutButton(props: { text?: string }): JSX.Element {
   const { text = 'Log Out' } = props;
   const classes = useStyles();
   const [loggingOut, setLoggingOut] = useState(false);
