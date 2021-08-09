@@ -13,13 +13,6 @@ export type GetSessionData = Omit<PostUserData, 'password'>;
 
 export type Role = 'USER' | 'ADMIN';
 
-type NgoTime = {
-  hour: number;
-  minute: number;
-  nano: number;
-  second: number;
-};
-
 type NgoCategory = 'conference' | 'seminar' | 'presentation';
 
 export type GetEventData = {
@@ -44,4 +37,28 @@ export type PostEventData = Omit<
 > & {
   start_time: string;
   end_time: string;
+};
+
+/**
+ * ⦁	
+⦁	First Name
+⦁	Last Name
+⦁	Email ID
+⦁	Contact#
+⦁	Address
+⦁	Total Adult Qty
+⦁	Total Child Qty
+
+ */
+
+export type TicketData = {
+  address: string;
+  adult_qty: number;
+  child_qty: number;
+  contact_number: number;
+  email: string;
+  eventId: number;
+  first_name: string;
+  last_name: string;
+  userId: number;
 };

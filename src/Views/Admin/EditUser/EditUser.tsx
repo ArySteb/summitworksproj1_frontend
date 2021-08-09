@@ -53,6 +53,16 @@ function reducer(user: PostUserData, action: ReduxAction): PostUserData {
   }
 }
 
+export function errReducer<T>(
+  state: Record<keyof T, boolean>,
+  action: [keyof T, boolean]
+): Record<keyof T, boolean> {
+  return {
+    ...state,
+    [action[0]]: action[1],
+  };
+}
+
 export default function EditUser(): JSX.Element {
   const classes = useStyles();
   const query = useQuery();
@@ -67,6 +77,19 @@ export default function EditUser(): JSX.Element {
     password: '',
     role: 'USER',
   });
+  const [errs, errDispatch] = useReducer(
+    (
+      a: Record<keyof PostUserData, boolean>,
+      b: [keyof PostUserData, boolean]
+    ) => errReducer<PostUserData>(a, b),
+    {
+      first_name: false,
+      last_name: false,
+      email: false,
+      password: true,
+      role: false,
+    }
+  );
 
   useEffect(() => {
     axios
@@ -91,6 +114,7 @@ export default function EditUser(): JSX.Element {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+    if (Object.values(errs).some((x) => x)) return;
     axios
       .put(`/api/users/${id}`, user)
       .then(() => {
@@ -109,35 +133,55 @@ export default function EditUser(): JSX.Element {
       <main>
         <form onSubmit={handleSubmit}>
           <TextField
+            error={errs.first_name}
+            helperText={errs.first_name ? 'field cannot be blank' : ''}
             className={classes.field}
             placeholder="First Name"
             type="text"
             value={user.first_name}
-            onChange={(e) => changeField('first_name', e.target.value)}
+            onChange={(e) => {
+              changeField('first_name', e.target.value);
+              errDispatch(['first_name', !e.target.value.trim()]);
+            }}
           />
           <br />
           <TextField
+            error={errs.last_name}
+            helperText={errs.last_name ? 'field cannot be blank' : ''}
             className={classes.field}
             placeholder="Last Name"
             type="text"
             value={user.last_name}
-            onChange={(e) => changeField('last_name', e.target.value)}
+            onChange={(e) => {
+              changeField('last_name', e.target.value);
+              errDispatch(['last_name', !e.target.value.trim()]);
+            }}
           />
           <br />
           <TextField
+            error={errs.email}
+            helperText={errs.email ? 'field cannot be blank' : ''}
             className={classes.field}
             placeholder="Email"
             type="text"
             value={user.email}
-            onChange={(e) => changeField('email', e.target.value)}
+            onChange={(e) => {
+              changeField('email', e.target.value);
+              errDispatch(['email', !e.target.value.trim()]);
+            }}
           />
           <br />
           <TextField
+            error={errs.password}
+            helperText={errs.password ? 'invalid password' : ''}
             className={classes.field}
             placeholder="New Password"
             type="password"
             value={user.password}
-            onChange={(e) => changeField('password', e.target.value)}
+            onChange={(e) => {
+              changeField('password', e.target.value);
+              errDispatch(['password', !e.target.value.trim()]);
+            }}
           />
           <br />
           <Select
