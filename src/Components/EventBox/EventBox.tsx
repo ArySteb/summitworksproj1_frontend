@@ -39,11 +39,11 @@ export default function EventBox(props: {
     event_id,
   } = props;
 
-  const { url } = useRouteMatch();
+  const url = useRouteMatch(['/user', '/admin/user_view'])?.url;
 
   return (
     <div className={classes.box}>
-      <Link to={`${url}/view?event=${event_id}`}>
+      <Link to={url ? `${url}/view-event?event=${event_id}` : `/`}>
         <img alt={name} src={img_url} className={classes.image} />
       </Link>
       <div className={classes.name}>{name}</div>

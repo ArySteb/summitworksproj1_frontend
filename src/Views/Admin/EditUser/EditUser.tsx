@@ -25,18 +25,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export type ReduxAction =
+export type ReduxAction<T> =
   | {
       type: 'change';
-      data: PostUserData[keyof PostUserData];
-      field: keyof PostUserData;
+      data: T[keyof T];
+      field: keyof T;
     }
   | {
       type: 'init';
-      data: Partial<PostUserData>;
+      data: Partial<T>;
     };
 
-function reducer(user: PostUserData, action: ReduxAction): PostUserData {
+function reducer(
+  user: PostUserData,
+  action: ReduxAction<PostUserData>
+): PostUserData {
   switch (action.type) {
     case 'change':
       return {

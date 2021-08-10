@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import {
   Button,
   CircularProgress,
@@ -54,8 +54,15 @@ export default function EventInfo(): JSX.Element {
       .finally(() => setLoading(false));
   }, [qid]);
 
+  const url = useRouteMatch(['/user', '/admin/user_view'])?.url;
+
   const button = event?.allow_reg ? (
-    <Button variant="outlined" className={classes.ta}>
+    <Button
+      variant="outlined"
+      className={classes.ta}
+      component={Link}
+      to={url ? `${url}/register?event=${qid}` : `/`}
+    >
       Register
     </Button>
   ) : (

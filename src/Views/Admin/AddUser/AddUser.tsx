@@ -26,7 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function reducer(user: PostUserData, action: ReduxAction): PostUserData {
+function reducer(
+  user: PostUserData,
+  action: ReduxAction<PostUserData>
+): PostUserData {
   switch (action.type) {
     case 'change':
       if (action.field) {

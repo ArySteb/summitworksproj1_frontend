@@ -39,23 +39,11 @@ export type PostEventData = Omit<
   end_time: string;
 };
 
-/**
- * ⦁	
-⦁	First Name
-⦁	Last Name
-⦁	Email ID
-⦁	Contact#
-⦁	Address
-⦁	Total Adult Qty
-⦁	Total Child Qty
-
- */
-
 export type TicketData = {
   address: string;
   adult_qty: number;
   child_qty: number;
-  contact_number: number;
+  contact_number: string;
   email: string;
   eventId: number;
   first_name: string;
